@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Check your bus</title>
+	<style type="text/css">
+		#map{
+			height:100%;
+		}
+		html, body {
+        	height: 100%;
+       		margin: 0;
+        	padding: 0;
+      		}
+	</style>
+</head>
+<body>
+	<input id="unaza" type="submit" value="Unaza">
+	<input id="tirana" type="submit" value="Tirana e re">
+	<input id="userfrSt" type="submit" value="User to station">
+	<input id="destfrSt" type="submit" value="Destination to station">
+	<input id="usrtodst" type="submit" value="User to Destination">
+	<div id="map"></div>
+	<script type="text/javascript">
+		
+		
+		function initMap(){
+			var pos = {
+				lat: 41.329864,
+				lng: 19.818081
+			};
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: pos,
+				zoom: 20,
+				mapTypeId: 'terrain',
+				mapTypeControl: true,
+				streetViewControl: true
+
+			});
+			var directionsService = new google.maps.DirectionsService;
+			var directionsDisplay = new google.maps.DirectionsRenderer;
+			directionsDisplay.setMap(map);
+			//kordinatat e unazes
+			var kordinatat = [
+				
+				{lat:41.335033,lng:19.811492},
+				{lat:41.336003,lng:19.817112},
+				{lat:41.337985,lng:19.821758},
+				{lat:41.339878,lng:19.825674},
+				{lat:41.339660,lng:19.829225},
+				{lat:41.336591,lng:19.831317},
+				{lat:41.336599,lng:19.831285},
+				{lat:41.333046,lng:19.833763},
+				{lat:41.330541,lng:19.833817},
+				{lat:41.329558,lng:19.831575},
+				{lat:41.327705,lng:19.827584},
+ 				{lat:41.325159,lng:19.824424},
+				{lat:41.323789,lng:19.817826},
+				{lat:41.323028,lng:19.812864},
+				{lat:41.322073,lng:19.806759},
+				{lat:41.322317,lng:19.805096},
+				{lat:41.325194,lng:19.803852},
+				{lat:41.328211,lng:19.802666},
+				{lat:41.331865,lng:19.804361}
+				
+			
+			];
+			//kordinatat e tiranes se re
+			var koor = [
+				
+				{lat:41.338072,lng:19.785139},
+				{lat:41.335463,lng:19.783136},
+				{lat:41.331518,lng:19.783874},
+				{lat:41.325791,lng:19.787015},
+				{lat:41.322051,lng:19.789142},
+				{lat:41.322153,lng:19.791483},
+				{lat:41.320939,lng:19.793176},
+				{lat:41.320300,lng:19.799230},
+				{lat:41.321299,lng:19.805409},
+				{lat:41.318608,lng:19.808778},
+				{lat:41.318044,lng:19.812963},
+				{lat:41.319130,lng:19.818140},
+				{lat:41.317929,lng:19.821830},
+				{lat:41.322812,lng:19.820210},
+				{lat:41.330355,lng:19.818177},
+				{lat:41.334434,lng:19.816890},
+				{lat:41.335672,lng:19.814958},
+				{lat:41.335239,lng:19.811800},
+				{lat:41.334609,lng:19.808006},
+				{lat:41.333707,lng:19.802513},
+				{lat:41.335689,lng:19.797031},
+				{lat:41.337441,lng:19.792176},
+				
+			];
+			 
+			var wpoints = [];
+			var wpoints2 = [];
+			for(var i =0;i<kordinatat.length;i++){
+				wpoints.push({
+					location:kordinatat[i],
+					stopover: true
+				});
+			}
+			for(var i =0;i<koor.length;i++){
+				wpoints2.push({
+					location:koor[i],
+					stopover: true
+				});
+			}
+
+				var startU = {lat:41.334505,lng:19.807642};
+				var endU = {lat:41.334505,lng:19.807642};
+				var startT = {lat:41.338878,lng:19.787921};
+				var endT = {lat:41.338878,lng:19.787921};
+				var s = startU , e = endU;
+				var wp= wpoints;
+				document.getElementById('unaza').addEventListener('click', function(){
+					displayRoute(directionsService,directionsDisplay,startU,endU,wpoints);
+				});
+				document.getElementById('tirana').addEventListener('click',function(){
+					displayRoute(directionsService,directionsDisplay,startT,endT,wpoints2);
+				});
+				
+				function displayRoute(directionsService,directionsDisplay, s,  e,  wp){
+					directionsService.route({
+						origin: s,
+						destination: e,
+						waypoints: wp,
+						optimizeWaypoints: true,
+						travelMode: 'DRIVING'
+					}, function(response, status){
+						if(status==='OK'){
+							directionsDisplay.setDirections(response)
+						}else 
+							alert("fail "+ status);
+					});
+				}
+
+				var infoWindow = new google.maps.InfoWindow;
+
+				if(navigator.geolocation){
+					navigator.geolocation.getCurrentPosition(function(position){
+						pos = {
+							lat: position.coords.latitude,
+							lng: position.coords.longitude
+						};
+						
+						infoWindow.setPosition(pos);
+						infoWindow.setContent('Vendndodhja juaj');
+						infoWindow.open(map);
+						map.setCenter(pos);
+					});
+				}
+				// pos = {
+				// 	lat: 41.323012899999995,
+				// 	lng: 19.799983599999997
+				// }
+				// infoWindow.setPosition(pos);
+				// infoWindow.setContent("here");
+				// infoWindow.open(map);
+				// map.setCenter(pos);
+
+				var min = 999999;
+				var st = '';
+				var i = 0;
+
+				function f(i){
+					var p = {lat: kordinatat[i].lat,lng: kordinatat[i].lng};
+						directionsService.route({
+						origin: pos,
+						destination: p,
+						travelMode: 'WALKING'
+					},function(result, status){
+						if(status === 'OK'){
+								
+							if(min > result.routes[0].legs[0].distance.value){
+								min = result.routes[0].legs[0].distance.value;
+								st = new google.maps.LatLng(p.lat,p.lng);
+								
+								//directionsDisplay.setDirections(result);	
+							}
+						}else alert(status);
+					});
+
+				}
+
+				var dest;
+				map.addListener('click',function(event){
+					dest = event.latLng;
+					var iw = new google.maps.InfoWindow({
+						position: dest,
+						content: 'Destinacioni juaj'
+					});
+					iw.open(map);
+				});
+				var d = '';
+				var m = 999999;
+				function g(i){
+					var p = {lat:kordinatat[i].lat, lng: kordinatat[i].lng};
+					directionsService.route({
+						origin: dest,
+						destination: p,
+						travelMode: 'WALKING'
+					}, function(result,status){
+						if(status === 'OK'){
+							if(m > result.routes[0].legs[0].distance.value){
+								m = result.routes[0].legs[0].distance.value;
+								d = new google.maps.LatLng(p.lat,p.lng);
+							}
+						}else alert(status);
+					});
+				}
+
+				document.getElementById('userfrSt').addEventListener('click',function(){
+					for(; i < kordinatat.length; i++){
+					
+						
+					
+					
+					var v = setTimeout(f,i*800,i);
+					
+					
+					
+				}
+				
+					setTimeout(function(){},i*1000);
+					directionsService.route({
+						origin: pos,
+						destination: st,
+						travelMode: 'WALKING'
+					},function(result,status){
+						if(status === 'OK')
+							directionsDisplay.setDirections(result);
+						
+					});
+				});
+				var j =0;
+				document.getElementById('destfrSt').addEventListener('click',function(){
+					for(;j<kordinatat.length;j++){
+						var w = setTimeout(g,j*800,j);
+					}
+					setTimeout(function(){},j*800);
+					directionsService.route({
+						origin: dest,
+						destination: d,
+						travelMode: 'WALKING'
+					}, function(result,status){
+						if(status === 'OK'){
+							directionsDisplay.setDirections(result);
+						}
+					});
+				});
+
+
+				document.getElementById('usrtodst').addEventListener('click',function(){
+					directionsService.route({
+						origin: st,
+						destination: d,
+						travelMode: 'DRIVING',
+						
+					},function(result,status){
+						if(status === 'OK')
+							directionsDisplay.setDirections(result);
+						else alert(status);
+					});
+				})
+				// });
+				
+				
+		}
+
+
+	</script>
+	<script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNOPsuCh3K5DcjI5cQ_UF32E2YUJj5sfw&callback=initMap"
+      async defer>
+   	</script>
+</body>
+</html>

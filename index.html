@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ushtrime GIS</title>
+
+	<style type="text/css">
+		#map{
+			width: 100%;
+			height: 450px;
+		}
+		select {
+		  margin: 10px;
+		  border: 1px solid #111;
+		  background: transparent;
+		  width: 300px;
+		  padding: 5px 35px 5px 5px;
+		  font-size: 16px;
+		  border: 1px solid #ccc;
+		  height: 34px;
+		}
+		select:first{
+			color: #999;
+		}
+
+		input[type="text"] {
+		  margin: 10px;
+		  border: 1px solid #111;
+		  background: transparent;
+		  width: 300px;
+		  padding: 5px 35px 5px 5px;
+		  font-size: 16px;
+		  border: 1px solid #ccc;
+		  height: 34px;
+		}
+		
+		#shfaq{
+			margin: 10px;
+			padding: 5px 35px 5px 5px;
+			font-size: 16px;
+			height: 34px;
+			background-color: #59d6b2;
+			border: none;
+			text-align: center;
+			font-weight: bold;
+			color: #fff;
+			letter-spacing: 0.8;
+		}
+
+	</style>
+
+</head>
+<body>
+
+		<select id="linjat">
+			<option disabled selected>Zgjidh linjen</option>
+			<option value="tiranaRe">Tirana e Re</option>
+			<option value="unaza">Unaza</option>
+		</select>
+
+		<select id="korsia">
+			<option disabled selected>Zgjidh korsine</option>
+			<option value="majtas">Majtas (1)</option>
+			<option value="djathtas">Djathtas (2)</option>
+		</select>
+		
+		<button id="shfaq">Shfaq linjen</button>
+
+		<hr>
+
+		<input type="text" id="adresa" placeholder="Vendosni destinacionin">
+		<button id="shfaq" class="rruga">Shfaq Rrugen</button>
+
+		<hr>
+		<div id="map"></div>
+
+	
+
+	<script type="text/javascript">
+
+		function initMap(){
+			// sample map
+			var map = new google.maps.Map(document.getElementById('map'), {
+				mapTypeControl: true,
+				zoom: 13,
+				center: {
+					lat: 41.3275,
+					lng: 19.8187
+				},
+				streetViewControl: true
+			});
+		}
+
+	</script>
+
+	
+
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8vnHNOlgcYkG07SXlK2Vsx8DlKC_OR3E&callback=initMap"></script>
+</body>
+</html>
